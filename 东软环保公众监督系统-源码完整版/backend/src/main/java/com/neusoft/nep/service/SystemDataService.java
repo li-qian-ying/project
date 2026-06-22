@@ -5,7 +5,6 @@ import com.neusoft.nep.entity.*;
 import com.neusoft.nep.mapper.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -55,27 +54,7 @@ public class SystemDataService {
         result.put("cityCoverage", areas().size());
         result.put("status", group(feedbacks, AqiFeedback::getStatus)); result.put("provinces", group(feedbacks, AqiFeedback::getProvince));
         result.put("levels", group(measurements, AqiMeasurement::getFinalAqiLevel));
-        result.put("trend", trend(feedbacks));
         return result;
-    }
-
-    private List<Map<String, Object>> trend(List<AqiFeedback> feedbacks) {
-        Map<String, long[]> grouped = new TreeMap<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd");
-        feedbacks.stream().filter(item -> item.getCreateTime() != null).forEach(item -> {
-            String day = item.getCreateTime().format(formatter);
-            long[] values = grouped.computeIfAbsent(day, key -> new long[2]);
-            values[0]++;
-            if ("已完成".equals(item.getStatus())) values[1]++;
-        });
-        int skip = Math.max(0, grouped.size() - 7);
-        return grouped.entrySet().stream().skip(skip).map(entry -> {
-            Map<String, Object> row = new LinkedHashMap<>();
-            row.put("day", entry.getKey());
-            row.put("received", entry.getValue()[0]);
-            row.put("done", entry.getValue()[1]);
-            return row;
-        }).collect(Collectors.toList());
     }
 
     private long countStatus(List<AqiFeedback> rows, String status) { return rows.stream().filter(item -> status.equals(item.getStatus())).count(); }
