@@ -1,0 +1,8 @@
+.decision-map-grid{align-items:start}
+.decision-table-tools,.row-actions{display:flex;align-items:center;gap:8px}
+.decision-table-tools select{padding:9px 28px 9px 10px;border:1px solid #d7e5e1;border-radius:5px;background:#fff;color:#45635b}
+.task-search{display:flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid #d9e7e3;border-radius:5px;background:#fff}
+.task-search input{width:130px;border:0;outline:0}
+.task-search i{color:#789088}
+.pollutant-chart{min-height:0}
+@media(max-width:1450px){.task-search{display:none}.decision-table-tools{flex-wrap:wrap}}
